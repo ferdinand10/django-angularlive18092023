@@ -1,0 +1,101 @@
+<div class="container mt-5">
+    <div class="form-check">
+        <div *ngIf="affichage==true">
+            <div class="input-group ps-5">
+                Nombre taches:{{nbreTasks}}
+            </div>
+        
+            <h3 class="mb-5"
+                style="border-radius:10px;background-color:rgb(30, 28, 28);color:white;text-align:center;padding:10px;text-transform: uppercase;font-family:Quicksand;box-shadow: 10px 5px 5px rgb(119, 119, 119);">
+                <i class="fa-solid fa-list-ol"></i>Liste Des taches
+            </h3>
+
+
+            <button type="button" class="btn btn-success" (click)="afficherFormulaire()">Ajouter<i class="fas fa-plus-circle"></i></button>
+            <button type="button" class="btn btn-primary" (click)="Recharger()">Recharger<i class="fa-solid fa-spinner"></i></button>
+            <div class={{alertColor}} role="alert" *ngIf="isafficherMessageChargement">
+                {{message}}
+                <img src="./assets/Images/chargement.gif" style="height:40px;width:40px" *ngIf="alertColor === 'alert alert-primary'">
+                <img src="./assets/Images/panneau danger.jpg" style="height:40px;width:40px" *ngIf="alertColor === 'alert alert-danger'">
+            </div>
+            <img src="./assets/Images/Erreur Serveur.webp" style="height:400px;width:800px" *ngIf="alertColor === 'alert alert-danger'">
+            <table class="table" *ngIf="!isafficherMessageChargement">
+                <thead>
+                    <tr>
+                        <th scope="col">libelle Tache </th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date Execution</th>
+                        <th scope="col">Prorite</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of Tasks;let n=index;">
+                        <td>{{task.title}}</td>
+                        <td>{{task.description}}</td>
+                        <td>{{task.due_date|date:'dd-MM-yy' }}</td>
+                        <td>{{task.priority}}</td>
+                        <td *ngIf="task.completed==true">completée</td>
+                        <td *ngIf="task.completed==false">Non Completée</td>
+                        <td class="d-flex justify-content-around">           
+                            <button type="button" class="btn btn-secondary"
+                                (click)="supprimerTask(task)">Supprimer<i class="fas fa-times"></i></button>
+                            <button type="button" class="btn btn-secondary" (click)="UpdateTask(task)">Modifier<i class="fas fa-times"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="affichage==false">
+        <h3 class="mb-5"
+            style="border-radius:10px;background-color:rgb(30, 28, 28);color:white;text-align:center;padding:10px;text-transform: uppercase;font-family:Quicksand">
+            <i class="fa-solid fa-list-ol"></i>Liste Des taches
+        </h3>
+        <div class={{alertColor}} role="alert" *ngIf="isafficherMessageChargement">
+            {{message}}
+            <img src="./assets/Images/chargement.gif" style="height:40px;width:40px" *ngIf="alertColor === 'alert alert-primary'">
+            <img src="./assets/Images/panneau danger.jpg" style="height:40px;width:40px" *ngIf="alertColor === 'alert alert-danger'">
+        </div>
+        <img src="./assets/Images/Erreur Serveur.webp" style="height:400px;width:800px" *ngIf="alertColor === 'alert alert-danger'">
+        <button type="button" class="btn btn-primary" (click)="afficherListeTasks()">Voir Liste taches<i class="fas fa-eye"></i></button>
+        <form (ngSubmit)="SauvegardeTask()" #registerForm="ngForm">
+            <div class="form-group">
+                <label for="exampleInputPassword1">Libelle tache</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="libelle de la Tache"
+                    [(ngModel)]="task.title" name="libelletask" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Description</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Description"
+                    [(ngModel)]="task.description" name="codetask" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Date Execution</label>
+                <input type="date" class="form-control"  placeholder="Date D'execution"
+                    [(ngModel)]="task.due_date" name="nombretask" required>
+            </div>
+            <div class="form-group">
+                <label>Priorité</label>
+                <select [(ngModel)]="task.priority"
+                    name="pririty"
+                    class="form-control"
+                    placeholder="Choisissez votre Statut juridique">
+                    <option *ngFor="let optionPriority of priorityChoice"
+                        [value]="optionPriority.value">
+                        {{ optionPriority.label }}
+                    </option>
+                </select>
+              
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="!registerForm.valid">
+                Reussie
+                <i class="fas fa-check-double"></i>
+                <!-- <img src="./assets/Images/chargement.gif" style="height:30px;width:30px" *ngIf="alertColor === 'alert alert-primary'"> -->
+            </button>
+        </form>
+
+    </div>
+</div>
